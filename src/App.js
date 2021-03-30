@@ -1,4 +1,5 @@
 import "./App.css";
+import Post from "./Post";
 
 function App() {
   return (
@@ -10,6 +11,8 @@ function App() {
           alt=""
         />
       </div>
+      <Post />
+      <Post />
     </div>
   );
 }
