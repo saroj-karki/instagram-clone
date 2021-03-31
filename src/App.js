@@ -1,22 +1,22 @@
 import "./App.css";
 import Post from "./Post";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { db } from "./firebase";
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      username: "astrogeek",
-      caption: "getting into it",
-      imageUrl:
-        "https://www.freecodecamp.org/news/content/images/size/w2000/2020/02/Ekran-Resmi-2019-11-18-18.08.13.png",
-    },
-    {
-      username: "elon",
-      caption: "lets do it",
-      imageUrl:
-        "https://images.theconversation.com/files/10787/original/54954sbn-1337307547.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    db.collection("posts").onSnapshot((snapshot) => {
+      setPosts(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          post: doc.data(),
+        }))
+      );
+    });
+  }, []);
+
   return (
     <div className="app">
       <div className="app__header">
@@ -26,8 +26,9 @@ function App() {
           alt=""
         />
       </div>
-      {posts.map((post) => (
+      {posts.map(({ id, post }) => (
         <Post
+          key={id}
           username={post.username}
           caption={post.caption}
           imageUrl={post.imageUrl}
